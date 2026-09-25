@@ -464,3 +464,220 @@ export const fallbackExplanation = {
     "No reported collision hazards or lane blocks"
   ]
 };
+
+export const fallbackTolls = [
+  {
+    id: "TOLL-TS-01",
+    name: "Manoharabad Toll Plaza (NH 44)",
+    location: "National Highway 44, Toopran - Medchal, Telangana",
+    latitude: 17.7667,
+    longitude: 78.4333,
+    estimatedCost: 90,
+    currency: "₹",
+    estimatedDelayMinutes: 2,
+    distanceKm: 42.5,
+    status: "ACTIVE",
+    highway: "NH 44",
+    simulated: false
+  },
+  {
+    id: "TOLL-TS-02",
+    name: "Indalwai Toll Plaza (NH 44)",
+    location: "National Highway 44, Indalwai, Nizamabad, Telangana",
+    latitude: 18.5120,
+    longitude: 78.2040,
+    estimatedCost: 85,
+    currency: "₹",
+    estimatedDelayMinutes: 2,
+    distanceKm: 28.0,
+    status: "ACTIVE",
+    highway: "NH 44",
+    simulated: false
+  },
+  {
+    id: "TOLL-01",
+    name: "Electronic City Expressway Toll Plaza",
+    latitude: 12.9350,
+    longitude: 77.6180,
+    estimatedCost: 85,
+    currency: "₹",
+    estimatedDelayMinutes: 2,
+    distanceKm: 6.8,
+    status: "ACTIVE",
+    simulated: true
+  },
+  {
+    id: "TOLL-02",
+    name: "Airport Expressway Elevated Toll Plaza",
+    latitude: 12.9620,
+    longitude: 77.6300,
+    estimatedCost: 110,
+    currency: "₹",
+    estimatedDelayMinutes: 3,
+    distanceKm: 11.2,
+    status: "ACTIVE",
+    simulated: true
+  }
+];
+
+export const realPlacesDirectory = [
+  {
+    id: "place-kmr",
+    name: "Kamareddy",
+    address: "Kamareddy, Telangana, India",
+    latitude: 18.3222091,
+    longitude: 78.3387118,
+    category: "City / Town",
+    isReal: true
+  },
+  {
+    id: "place-hyd",
+    name: "Hyderabad",
+    address: "Hyderabad, Telangana, India",
+    latitude: 17.385044,
+    longitude: 78.486671,
+    category: "Metropolis",
+    isReal: true
+  },
+  {
+    id: "place-sec",
+    name: "Secunderabad",
+    address: "Secunderabad, Hyderabad, Telangana, India",
+    latitude: 17.4399295,
+    longitude: 78.4982741,
+    category: "City",
+    isReal: true
+  },
+  {
+    id: "place-nzb",
+    name: "Nizamabad",
+    address: "Nizamabad, Telangana, India",
+    latitude: 18.6725,
+    longitude: 78.0941,
+    category: "City",
+    isReal: true
+  },
+  {
+    id: "place-wrg",
+    name: "Warangal",
+    address: "Warangal, Telangana, India",
+    latitude: 17.9689,
+    longitude: 79.5941,
+    category: "City",
+    isReal: true
+  },
+  {
+    id: "place-krm",
+    name: "Karimnagar",
+    address: "Karimnagar, Telangana, India",
+    latitude: 18.4386,
+    longitude: 79.1288,
+    category: "City",
+    isReal: true
+  },
+  {
+    id: "place-mdc",
+    name: "Medchal",
+    address: "Medchal, Medchal-Malkajgiri, Telangana, India",
+    latitude: 17.6297,
+    longitude: 78.4814,
+    category: "Town",
+    isReal: true
+  },
+  {
+    id: "place-tpr",
+    name: "Toopran",
+    address: "Toopran, Medak, Telangana, India",
+    latitude: 17.8931,
+    longitude: 78.4722,
+    category: "Town",
+    isReal: true
+  },
+  {
+    id: "place-gch",
+    name: "Gachibowli",
+    address: "Gachibowli, Hyderabad, Telangana, India",
+    latitude: 17.4401,
+    longitude: 78.3489,
+    category: "IT Corridor",
+    isReal: true
+  },
+  {
+    id: "place-htc",
+    name: "Hitec City",
+    address: "Hitec City, Madhapur, Hyderabad, Telangana, India",
+    latitude: 17.4474,
+    longitude: 78.3762,
+    category: "IT Hub",
+    isReal: true
+  },
+  {
+    id: "place-rgi",
+    name: "Rajiv Gandhi International Airport (RGIA)",
+    address: "Shamshabad, Hyderabad, Telangana, India",
+    latitude: 17.2403,
+    longitude: 78.4294,
+    category: "Airport",
+    isReal: true
+  },
+  {
+    id: "place-blr",
+    name: "Bengaluru",
+    address: "Bengaluru, Karnataka, India",
+    latitude: 12.9716,
+    longitude: 77.5946,
+    category: "Metropolis",
+    isReal: true
+  },
+  {
+    id: "place-whf",
+    name: "Whitefield",
+    address: "Whitefield, Bengaluru, Karnataka, India",
+    latitude: 12.9698,
+    longitude: 77.7500,
+    category: "IT Hub",
+    isReal: true
+  },
+  {
+    id: "place-mum",
+    name: "Mumbai",
+    address: "Mumbai, Maharashtra, India",
+    latitude: 19.0760,
+    longitude: 72.8777,
+    category: "Metropolis",
+    isReal: true
+  },
+  {
+    id: "place-del",
+    name: "New Delhi",
+    address: "New Delhi, Delhi, India",
+    latitude: 28.6139,
+    longitude: 77.2090,
+    category: "Capital",
+    isReal: true
+  }
+];
+
+export const demoPlaces = [
+  ...realPlacesDirectory,
+  {
+    id: "demo-place-1",
+    name: "North Gate Tech Hub (J1)",
+    address: "Outer Ring Road, North Gateway, Bengaluru",
+    latitude: 12.9760,
+    longitude: 77.5920,
+    category: "Tech Park",
+    simulated: true
+  },
+  {
+    id: "demo-place-2",
+    name: "Metro Central Terminal (J8)",
+    address: "Central Terminal Avenue, Koramangala, Bengaluru",
+    latitude: 12.9250,
+    longitude: 77.6350,
+    category: "Transit Hub",
+    simulated: true
+  }
+];
+
+

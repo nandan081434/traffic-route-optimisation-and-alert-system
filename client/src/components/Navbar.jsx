@@ -31,17 +31,19 @@ export default function Navbar({
             <Compass size={18} className="text-white sm:w-5 sm:h-5" />
           </div>
 
-          <div>
-            <div className="flex items-center gap-1.5 sm:gap-2">
-              <span className="text-sm sm:text-base font-black tracking-wider text-white">SMARTROUTE</span>
-              <span className="hidden sm:inline-block px-1.5 py-0.5 rounded-md text-[9px] font-mono font-bold bg-cyan-500/15 text-cyan-300 border border-cyan-500/30">
-                v1.0
-              </span>
+            <div>
+              <div className="flex items-center gap-1.5 sm:gap-2">
+                <span className="text-xs sm:text-sm md:text-base font-black tracking-wide text-white uppercase">
+                  INTELLIGENT TRAFFIC MONITORING & ROUTE ALERT SYSTEM
+                </span>
+                <span className="hidden sm:inline-block px-1.5 py-0.5 rounded-md text-[9px] font-mono font-bold bg-cyan-500/15 text-cyan-300 border border-cyan-500/30">
+                  v1.0
+                </span>
+              </div>
+              <p className="hidden lg:block text-[11px] text-slate-400 font-medium">
+                Real-Time Corridor Telemetry & Dynamic Navigation Platform
+              </p>
             </div>
-            <p className="hidden lg:block text-[11px] text-slate-400 font-medium">
-              Intelligent Traffic & Dynamic Route Management
-            </p>
-          </div>
         </div>
 
         {/* Right: Live Indicator & Actions */}

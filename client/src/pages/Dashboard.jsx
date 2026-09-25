@@ -1,5 +1,5 @@
-import React, { useState, useRef } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useRef, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   Bookmark,
   Sparkles,
@@ -9,10 +9,16 @@ import {
   Radio,
   Activity,
   AlertTriangle,
-  Construction
+  Construction,
+  Navigation,
+  MapPin,
+  RefreshCw
 } from 'lucide-react';
 
 import MapView from '../components/MapView.jsx';
+import DestinationSearchCard from '../components/DestinationSearchCard.jsx';
+import DynamicRecalculationAlert from '../components/DynamicRecalculationAlert.jsx';
+import DashboardStats from '../components/DashboardStats.jsx';
 import RouteSummaryBanner from '../components/RouteSummaryBanner.jsx';
 import CandidateRouteTable from '../components/CandidateRouteTable.jsx';
 import TrafficCorridorsTable from '../components/TrafficCorridorsTable.jsx';
@@ -24,6 +30,8 @@ import AnalyticsCards from '../components/AnalyticsCards.jsx';
 import DemoSimulatorBar from '../components/DemoSimulatorBar.jsx';
 
 import { api } from '../services/api.js';
+import { routingService } from '../services/routingService.js';
+import { fallbackTolls, realPlacesDirectory } from '../data/fallbackData.js';
 
 export default function Dashboard({
   kits = [],
@@ -49,7 +57,155 @@ export default function Dashboard({
   const [routeSaved, setRouteSaved] = useState(false);
   const [focusedCoord, setFocusedCoord] = useState(null);
 
+  // Real Navigation State: Initial default or user-entered locations
+  const [originLocation, setOriginLocation] = useState(realPlacesDirectory[0]); // Kamareddy
+  const [destinationLocation, setDestinationLocation] = useState(realPlacesDirectory[1]); // Hyderabad
+  const [isRealMode, setIsRealMode] = useState(true);
+
+  const [activeRoutes, setActiveRoutes] = useState([]);
+  const [isNavigating, setIsNavigating] = useState(false);
+  const [isCalculatingRoute, setIsCalculatingRoute] = useState(false);
+  const [navDetails, setNavDetails] = useState({
+    stepText: 'Head south on National Highway 44 toward Hyderabad',
+    eta: 98,
+    distance: 114.5,
+    trafficLevel: 'LOW'
+  });
+
+  // Dynamic route condition recalculation alert
+  const [recalcAlert, setRecalcAlert] = useState({
+    show: false,
+    previousEta: 98,
+    currentEta: 112,
+    alternateEta: 104,
+    potentialSaving: 8,
+    incidentText: 'Heavy congestion reported ahead near Toopran junction on NH 44.',
+    isSearchingAlt: false
+  });
+
   const mapSectionRef = useRef(null);
+
+  // Initial calculation on load for Kamareddy -> Hyderabad
+  useEffect(() => {
+    let isMounted = true;
+    async function initRoute() {
+      try {
+        const res = await routingService.calculateRoutes(realPlacesDirectory[0], realPlacesDirectory[1]);
+        if (isMounted && res.routes && res.routes.length > 0) {
+          setActiveRoutes(res.routes);
+          if (res.recommendedRoute) {
+            setSelectedRouteId(res.recommendedRoute.id);
+          }
+        }
+      } catch (err) {
+        console.warn('Initial route calculation error:', err);
+      }
+    }
+    initRoute();
+    return () => { isMounted = false; };
+  }, []);
+
+  // When originLocation changes, fly map to the new origin immediately
+  const handleOriginChange = (loc) => {
+    setOriginLocation(loc);
+    setIsRealMode(true);
+    if (loc?.latitude && loc?.longitude) {
+      setFocusedCoord([loc.latitude, loc.longitude]);
+    }
+  };
+
+  const handleDestinationChange = (loc) => {
+    setDestinationLocation(loc);
+    setIsRealMode(true);
+  };
+
+  // Calculate routes between origin and destination
+  const handleCalculateRoute = async ({ origin, destination }) => {
+    setIsCalculatingRoute(true);
+    if (origin) {
+      setOriginLocation(origin);
+      setFocusedCoord([origin.latitude, origin.longitude]);
+    }
+    if (destination) {
+      setDestinationLocation(destination);
+    }
+    setIsRealMode(true);
+
+    try {
+      const res = await routingService.calculateRoutes(origin, destination, {
+        isDemoMode: false,
+        customTolls: fallbackTolls
+      });
+
+      if (res.routes && res.routes.length > 0) {
+        setActiveRoutes(res.routes);
+        if (res.recommendedRoute) {
+          setSelectedRouteId(res.recommendedRoute.id);
+        } else {
+          setSelectedRouteId(res.routes[0].id);
+        }
+      }
+
+      if (mapSectionRef.current) {
+        mapSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    } catch (err) {
+      console.error('Route calculation error:', err);
+      throw err;
+    } finally {
+      setIsCalculatingRoute(false);
+    }
+  };
+
+  const handleStartNavigation = (targetRoute) => {
+    const route = targetRoute || activeDisplayRoute;
+    setIsNavigating(true);
+    setNavDetails({
+      stepText: route?.steps?.[0]?.instruction || `Head toward ${route?.name || 'Highway Corridor'}. Follow highway signs.`,
+      eta: route?.estimatedDurationMin || 98,
+      distance: route?.distanceKm || 114.5,
+      trafficLevel: route?.trafficLevel || 'LOW'
+    });
+
+    if (mapSectionRef.current) {
+      mapSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    // Demo route condition change simulation after 10 seconds of navigation
+    const demoTimer = setTimeout(() => {
+      setRecalcAlert({
+        show: true,
+        previousEta: route?.estimatedDurationMin || 98,
+        currentEta: (route?.estimatedDurationMin || 98) + 14,
+        alternateEta: (route?.estimatedDurationMin || 98) + 5,
+        potentialSaving: 9,
+        incidentText: '⚠️ Incident Alert: Slow traffic and lane obstruction reported ahead.',
+        isSearchingAlt: false
+      });
+    }, 10000);
+
+    return () => clearTimeout(demoTimer);
+  };
+
+  const handleStopNavigation = () => {
+    setIsNavigating(false);
+    setRecalcAlert(prev => ({ ...prev, show: false }));
+  };
+
+  const handleSwitchRoute = () => {
+    const altRoute = (activeRoutes && activeRoutes.find(r => r.id === 'real-route-2')) || activeRoutes[1];
+    if (altRoute) {
+      setSelectedRouteId(altRoute.id);
+      setNavDetails(prev => ({
+        ...prev,
+        stepText: `Rerouted via ${altRoute.name}. Potential saving: ${recalcAlert.potentialSaving} min!`,
+        eta: altRoute.estimatedDurationMin,
+        distance: altRoute.distanceKm,
+        trafficLevel: altRoute.trafficLevel
+      }));
+    }
+    setRecalcAlert(prev => ({ ...prev, show: false }));
+  };
 
   const handleSaveRoute = () => {
     setRouteSaved(true);
@@ -80,23 +236,24 @@ export default function Dashboard({
     }
   };
 
-  const activeDisplayRoute = selectedRoute || recommendedRoute || routes[0];
+  const candidateList = (activeRoutes && activeRoutes.length > 0) ? activeRoutes : routes;
+  const activeDisplayRoute = candidateList.find(r => r.id === selectedRouteId) || candidateList[0];
 
   return (
     <div className="space-y-6 sm:space-y-8 pb-10">
-      {/* 1. PAGE TITLE (Section 2 Hierarchy) */}
+      {/* 1. APP TITLE & BRANDING */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <div className="flex items-center gap-2">
-            <h1 className="text-xl sm:text-2xl md:text-3xl font-black tracking-tight text-white">
-              SMARTROUTE INTELLIGENCE
+          <div className="flex items-center gap-2 flex-wrap">
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-black tracking-tight text-white uppercase">
+              INTELLIGENT TRAFFIC MONITORING AND ROUTE ALERT SYSTEM
             </h1>
-            <span className="hidden xs:inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-cyan-500/15 text-cyan-300 border border-cyan-500/30 font-mono">
-              ROAD MONITORING ACTIVE
+            <span className="hidden xs:inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 font-mono">
+              REAL LOCATION ACTIVE
             </span>
           </div>
           <p className="text-xs sm:text-sm text-slate-400 mt-1">
-            Dynamic route recalculation powered by roadside kits & signal telemetry.
+            Dynamic real-time routing, corridor telemetry, traffic signal management & intelligent highway alerts.
           </p>
         </div>
 
@@ -116,101 +273,143 @@ export default function Dashboard({
         </div>
       </div>
 
-      {/* 2. LARGE LIVE MAP SECTION (Section 7, 8, 9, 10, 11, 12, 31) */}
+      {/* 2. REAL DESTINATION SEARCH CARD */}
+      <DestinationSearchCard
+        currentOrigin={originLocation}
+        currentDestination={destinationLocation}
+        onOriginChange={handleOriginChange}
+        onDestinationChange={handleDestinationChange}
+        onCalculateRoute={handleCalculateRoute}
+        isCalculating={isCalculatingRoute}
+      />
+
+      {/* 3. DYNAMIC RECALCULATION ALERT */}
+      <DynamicRecalculationAlert
+        showAlert={recalcAlert.show}
+        previousEta={recalcAlert.previousEta}
+        currentEta={recalcAlert.currentEta}
+        alternateEta={recalcAlert.alternateEta}
+        potentialSaving={recalcAlert.potentialSaving}
+        incidentText={recalcAlert.incidentText}
+        isSearchingAlt={recalcAlert.isSearchingAlt}
+        onSwitchRoute={handleSwitchRoute}
+        onDismiss={() => setRecalcAlert(prev => ({ ...prev, show: false }))}
+      />
+
+      {/* 4. DASHBOARD STATISTICS CARDS */}
+      <DashboardStats
+        kits={kits}
+        signals={signals}
+        incidents={incidents}
+        construction={construction}
+        routes={candidateList}
+        tolls={activeDisplayRoute?.tollPlazaDetails || fallbackTolls}
+      />
+
+      {/* 5. LARGE LIVE MAP SECTION */}
       <div ref={mapSectionRef} className="space-y-2.5 w-full">
-        {/* Map Header (Section 7) */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 pb-0.5">
           <div className="flex items-center gap-2.5 flex-wrap">
             <div>
               <div className="flex items-center gap-2">
                 <h2 className="text-sm sm:text-base font-extrabold text-white tracking-tight uppercase">
-                  LIVE NETWORK MAP
+                  LIVE CORRIDOR MAP & NAVIGATION
                 </h2>
                 <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 font-mono">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                  LIVE
+                  {isNavigating ? 'ACTIVE NAVIGATION' : 'REAL CORRIDOR VIEW'}
                 </span>
               </div>
               <p className="text-[11px] text-slate-400 font-medium -mt-0.5">
-                Dynamic Polyline Routing
+                {originLocation?.name?.split(',')[0]} → {destinationLocation?.name?.split(',')[0]} ({activeDisplayRoute?.distanceKm || 0} km)
               </p>
             </div>
           </div>
           <span className="text-[11px] text-slate-500 sm:text-right font-normal">
-            Tap any road, signal, kit, or candidate route
+            Real driving polyline & toll plazas
           </span>
         </div>
 
-        {/* Large Map View (Dominant visual component) */}
+        {/* Large Map View */}
         <MapView
-          routes={routes}
+          routes={candidateList}
           selectedRouteId={selectedRouteId}
           onSelectRoute={(r) => setSelectedRouteId(r.id)}
           kits={kits}
           signals={signals}
           incidents={incidents}
           construction={construction}
+          tolls={fallbackTolls}
           network={network}
+          originLocation={originLocation}
+          destinationLocation={destinationLocation}
           isRecalculating={isRecalculating}
           calcStatusText={calcStatusText}
           savedMinutes={savedMinutes}
           presentationMode={presentationMode}
           focusedCoord={focusedCoord}
+          isNavigating={isNavigating}
+          navDetails={navDetails}
+          onStopNavigation={handleStopNavigation}
+          isRealMode={isRealMode}
         />
       </div>
 
-      {/* 3. ROUTE SUMMARY / TRAFFIC STATUS (Section 13) */}
+      {/* 6. ROUTE SUMMARY BANNER */}
       <RouteSummaryBanner
         route={activeDisplayRoute}
-        savedMinutes={savedMinutes || 17}
-        onStartNavigation={() => {}}
+        savedMinutes={savedMinutes || 9}
+        isNavigating={isNavigating}
+        onStartNavigation={() => handleStartNavigation(activeDisplayRoute)}
+        onStopNavigation={handleStopNavigation}
         onViewAllRoutes={() => {
           const tableElem = document.getElementById('candidate-routes-table');
           if (tableElem) tableElem.scrollIntoView({ behavior: 'smooth' });
         }}
       />
 
-      {/* 4. CANDIDATE ROUTE TABLE (Section 14 Desktop Table, Section 15 Mobile Cards) */}
+      {/* 7. CANDIDATE ROUTE COMPARISON PANEL */}
       <div id="candidate-routes-table">
         <CandidateRouteTable
-          routes={routes}
+          routes={candidateList}
           selectedRouteId={selectedRouteId}
           onSelectRoute={(r) => setSelectedRouteId(r.id)}
+          onStartNavigation={handleStartNavigation}
         />
       </div>
 
-      {/* 5. TRAFFIC CORRIDORS TABLE (Section 16: 1 vehicle = 1 unit rule) */}
+      {/* 8. TRAFFIC CORRIDORS TABLE */}
       <TrafficCorridorsTable networkRoads={network?.roads || []} />
 
-      {/* 6. TRAFFIC MONITORING KITS TABLE (Section 17) */}
+      {/* 9. TRAFFIC MONITORING KITS TABLE */}
       <TrafficKitTable
         kits={kits}
         onSelectKit={(kit) => handleFocusOnMap([kit.latitude, kit.longitude])}
         onSendMockTelemetry={handleSendMockTelemetry}
       />
 
-      {/* 7. TRAFFIC SIGNALS STATUS (Section 18 with animated countdowns) */}
+      {/* 10. TRAFFIC SIGNALS STATUS */}
       <SignalCardsSection
         signals={signals}
         onSelectSignal={(sig) => sig.latitude && handleFocusOnMap([sig.latitude, sig.longitude])}
       />
 
-      {/* 8. ROAD CONSTRUCTION SECTION (Section 19 with View on Map) */}
+      {/* 11. ROAD CONSTRUCTION SECTION */}
       <ConstructionSection
         construction={construction}
         onViewOnMap={handleFocusOnMap}
       />
 
-      {/* 9. ACTIVE INCIDENTS SECTION (Section 20 with location focus) */}
+      {/* 12. ACTIVE INCIDENTS SECTION */}
       <IncidentSection
         incidents={incidents}
         onFocusIncident={handleFocusOnMap}
       />
 
-      {/* 10. SYSTEM ANALYTICS CARDS (Section 21) */}
+      {/* 13. SYSTEM ANALYTICS CARDS */}
       <AnalyticsCards />
 
-      {/* 11. TRAFFIC SIMULATION ENGINE CONTROLS */}
+      {/* 14. TRAFFIC SIMULATION ENGINE CONTROLS */}
       <DemoSimulatorBar
         onRefresh={() => {
           refreshTraffic();
@@ -221,7 +420,7 @@ export default function Dashboard({
         savedMinutes={savedMinutes}
       />
 
-      {/* 12. WHAT MAKES SMARTROUTE DIFFERENT? */}
+      {/* 15. SYSTEM ARCHITECTURE & HOW IT WORKS */}
       <div className="glass-panel p-4 sm:p-6 rounded-2xl border border-slate-800/90 bg-slate-950/70 space-y-4 shadow-xl">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
@@ -230,10 +429,10 @@ export default function Dashboard({
             </div>
             <div>
               <h4 className="text-xs sm:text-sm font-extrabold uppercase tracking-wider text-white">
-                WHAT MAKES SMARTROUTE DIFFERENT?
+                INTELLIGENT TRAFFIC MONITORING ARCHITECTURE
               </h4>
               <p className="text-[11px] text-slate-400">
-                Next-generation roadside edge telemetry vs. conventional delayed GPS tracking
+                Multi-corridor real-world navigation combined with roadside edge telemetry
               </p>
             </div>
           </div>
@@ -247,62 +446,27 @@ export default function Dashboard({
         </div>
 
         <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-          Traditional navigation systems rely on delayed aggregate smartphone tracking.
-          <b> SmartRoute continuously measures real roadside ground truth</b> by uniting four pillars:
+          The system evaluates real road networks, highway toll plazas, and junction conditions:
         </p>
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-1 text-center text-xs">
           <div className="p-3 rounded-xl bg-slate-900/80 border border-slate-800">
-            <span className="font-bold text-cyan-300 block text-xs">Traffic Kits</span>
-            <span className="text-[10px] text-slate-400 mt-0.5 block">1 unit per vehicle</span>
+            <span className="font-bold text-cyan-300 block text-xs">Real Geocoding</span>
+            <span className="text-[10px] text-slate-400 mt-0.5 block">Nominatim & Photon</span>
           </div>
           <div className="p-3 rounded-xl bg-slate-900/80 border border-slate-800">
-            <span className="font-bold text-emerald-300 block text-xs">Smart Signals</span>
-            <span className="text-[10px] text-slate-400 mt-0.5 block">Cycle countdowns</span>
+            <span className="font-bold text-emerald-300 block text-xs">Driving Polylines</span>
+            <span className="text-[10px] text-slate-400 mt-0.5 block">OSRM highway routes</span>
           </div>
           <div className="p-3 rounded-xl bg-slate-900/80 border border-slate-800">
-            <span className="font-bold text-amber-300 block text-xs">Road Events</span>
-            <span className="text-[10px] text-slate-400 mt-0.5 block">Accidents & work</span>
+            <span className="font-bold text-amber-300 block text-xs">Toll Detection</span>
+            <span className="text-[10px] text-slate-400 mt-0.5 block">Plazas & fees</span>
           </div>
           <div className="p-3 rounded-xl bg-slate-900/80 border border-slate-800">
-            <span className="font-bold text-purple-300 block text-xs">Dynamic Engine</span>
-            <span className="text-[10px] text-slate-400 mt-0.5 block">Sub-minute reroute</span>
+            <span className="font-bold text-purple-300 block text-xs">Dynamic Alerts</span>
+            <span className="text-[10px] text-slate-400 mt-0.5 block">Sub-minute rerouting</span>
           </div>
         </div>
-
-        {/* 7-Step Workflow */}
-        {showHowItWorks && (
-          <div className="pt-4 border-t border-slate-800/80 space-y-2 text-xs text-slate-300">
-            <div className="flex items-center gap-2.5">
-              <span className="w-5 h-5 rounded-full bg-cyan-500/20 text-cyan-400 font-mono font-bold flex items-center justify-center text-[10px] shrink-0 border border-cyan-500/30">1</span>
-              <span>Roadside traffic kit detects individual vehicle units passing through stop lines.</span>
-            </div>
-            <div className="flex items-center gap-2.5">
-              <span className="w-5 h-5 rounded-full bg-cyan-500/20 text-cyan-400 font-mono font-bold flex items-center justify-center text-[10px] shrink-0 border border-cyan-500/30">2</span>
-              <span>Sensor calculates exact queue length in meters backwards from intersection.</span>
-            </div>
-            <div className="flex items-center gap-2.5">
-              <span className="w-5 h-5 rounded-full bg-cyan-500/20 text-cyan-400 font-mono font-bold flex items-center justify-center text-[10px] shrink-0 border border-cyan-500/30">3</span>
-              <span>Discrete traffic status (LOW, MODERATE, HIGH, SEVERE) is dynamically updated.</span>
-            </div>
-            <div className="flex items-center gap-2.5">
-              <span className="w-5 h-5 rounded-full bg-cyan-500/20 text-cyan-400 font-mono font-bold flex items-center justify-center text-[10px] shrink-0 border border-cyan-500/30">4</span>
-              <span>Backend receives real-time edge telemetry via WebSocket & REST hardware endpoints.</span>
-            </div>
-            <div className="flex items-center gap-2.5">
-              <span className="w-5 h-5 rounded-full bg-cyan-500/20 text-cyan-400 font-mono font-bold flex items-center justify-center text-[10px] shrink-0 border border-cyan-500/30">5</span>
-              <span>Weighted route cost engine evaluates traffic, red light queues, construction and hazards.</span>
-            </div>
-            <div className="flex items-center gap-2.5">
-              <span className="w-5 h-5 rounded-full bg-cyan-500/20 text-cyan-400 font-mono font-bold flex items-center justify-center text-[10px] shrink-0 border border-cyan-500/30">6</span>
-              <span>Optimal bypass route is highlighted on the live map in bright emerald green.</span>
-            </div>
-            <div className="flex items-center gap-2.5">
-              <span className="w-5 h-5 rounded-full bg-cyan-500/20 text-cyan-400 font-mono font-bold flex items-center justify-center text-[10px] shrink-0 border border-cyan-500/30">7</span>
-              <span>Commuter receives instant dynamic notification highlighting exact travel time saved.</span>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );
