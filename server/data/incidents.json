@@ -1,0 +1,72 @@
+[
+  {
+    "id": "INC-201",
+    "type": "Accident",
+    "location": "Old Airport Flyover Access Ramp",
+    "latitude": 12.9560,
+    "longitude": 77.6120,
+    "severity": "MEDIUM",
+    "description": "Fender-bender on service road ramp. Cleared to shoulder.",
+    "status": "RESOLVED",
+    "reportedAt": "2026-09-25T07:30:00Z",
+    "trafficImpact": "LOW",
+    "roadId": "road-east-arterial",
+    "delayMinutes": 2
+  },
+  {
+    "id": "INC-202",
+    "type": "Broken Signal",
+    "location": "MG Central Crossing (TS-103)",
+    "latitude": 12.9730,
+    "longitude": 77.6150,
+    "severity": "MEDIUM",
+    "description": "Traffic light stuck in flashing amber cycle. Manual traffic police oversight.",
+    "status": "ACTIVE",
+    "reportedAt": "2026-09-25T08:15:00Z",
+    "trafficImpact": "MODERATE",
+    "roadId": "road-mg-arterial",
+    "delayMinutes": 4
+  },
+  {
+    "id": "INC-203",
+    "type": "Flooded Road",
+    "location": "Underpass at Old Airport Flyover",
+    "latitude": 12.9540,
+    "longitude": 77.6140,
+    "severity": "HIGH",
+    "description": "Water logging in lower underpass service road following pipeline leak.",
+    "status": "ACTIVE",
+    "reportedAt": "2026-09-25T07:50:00Z",
+    "trafficImpact": "HIGH",
+    "roadId": "road-east-arterial",
+    "delayMinutes": 6
+  },
+  {
+    "id": "INC-204",
+    "type": "Road Blockage",
+    "location": "Silk Board Secondary Slip Road",
+    "latitude": 12.9330,
+    "longitude": 77.6190,
+    "severity": "LOW",
+    "description": "Stalled cargo truck on curb side. Traffic moving slowly around.",
+    "status": "ACTIVE",
+    "reportedAt": "2026-09-25T08:55:00Z",
+    "trafficImpact": "LOW",
+    "roadId": "road-silk-interchange",
+    "delayMinutes": 3
+  },
+  {
+    "id": "INC-205",
+    "type": "Emergency Closure",
+    "location": "Victoria Memorial Bridge Link",
+    "latitude": 12.9510,
+    "longitude": 77.6010,
+    "severity": "CRITICAL",
+    "description": "Structural inspection in progress. Road closed to all motorized traffic.",
+    "status": "ACTIVE",
+    "reportedAt": "2026-09-25T06:30:00Z",
+    "trafficImpact": "SEVERE",
+    "roadId": "road-victoria-link",
+    "delayMinutes": 45
+  }
+]

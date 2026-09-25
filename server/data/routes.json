@@ -1,0 +1,354 @@
+{
+  "network": {
+    "center": [12.9520, 77.6100],
+    "zoom": 13,
+    "cityName": "Metro Tech Corridor (SmartRoute Demo)",
+    "junctions": [
+      { "id": "J1", "name": "North Gate Tech Hub", "coords": [12.9760, 77.5920] },
+      { "id": "J2", "name": "Cyber Expressway Junction", "coords": [12.9680, 77.6080] },
+      { "id": "J3", "name": "MG Central Crossing", "coords": [12.9730, 77.6150] },
+      { "id": "J4", "name": "Trinity Circle", "coords": [12.9650, 77.6200] },
+      { "id": "J5", "name": "Old Airport Flyover", "coords": [12.9560, 77.6120] },
+      { "id": "J6", "name": "Koramangala Outer Ring", "coords": [12.9440, 77.6240] },
+      { "id": "J7", "name": "Silk Board Interchange", "coords": [12.9320, 77.6200] },
+      { "id": "J8", "name": "Metro Central Terminal", "coords": [12.9250, 77.6350] },
+      { "id": "J9", "name": "Green Park Bypass North", "coords": [12.9600, 77.5850] },
+      { "id": "J10", "name": "Innovation Boulevard South", "coords": [12.9400, 77.5950] }
+    ],
+    "roads": [
+      {
+        "id": "road-north-arterial",
+        "name": "North Gateway Avenue",
+        "from": "J1",
+        "to": "J2",
+        "lengthKm": 2.1,
+        "freeFlowSpeed": 50,
+        "currentSpeed": 45,
+        "vehicleUnits": 8,
+        "queueLength": 30,
+        "trafficLevel": "LOW",
+        "isClosed": false,
+        "coordinates": [
+          [12.9760, 77.5920],
+          [12.9740, 77.5980],
+          [12.9710, 77.6040],
+          [12.9680, 77.6080]
+        ]
+      },
+      {
+        "id": "road-cyber-link",
+        "name": "Cyber Expressway",
+        "from": "J2",
+        "to": "J4",
+        "lengthKm": 1.6,
+        "freeFlowSpeed": 55,
+        "currentSpeed": 48,
+        "vehicleUnits": 14,
+        "queueLength": 40,
+        "trafficLevel": "LOW",
+        "isClosed": false,
+        "coordinates": [
+          [12.9680, 77.6080],
+          [12.9670, 77.6140],
+          [12.9650, 77.6200]
+        ]
+      },
+      {
+        "id": "road-central-exp",
+        "name": "Central Expressway Mainline",
+        "from": "J4",
+        "to": "J6",
+        "lengthKm": 2.6,
+        "freeFlowSpeed": 60,
+        "currentSpeed": 38,
+        "vehicleUnits": 12,
+        "queueLength": 45,
+        "trafficLevel": "LOW",
+        "isClosed": false,
+        "coordinates": [
+          [12.9650, 77.6200],
+          [12.9580, 77.6220],
+          [12.9510, 77.6230],
+          [12.9440, 77.6240]
+        ]
+      },
+      {
+        "id": "road-koramangala-ring",
+        "name": "Koramangala Outer Ring",
+        "from": "J6",
+        "to": "J8",
+        "lengthKm": 1.9,
+        "freeFlowSpeed": 50,
+        "currentSpeed": 40,
+        "vehicleUnits": 15,
+        "queueLength": 60,
+        "trafficLevel": "MODERATE",
+        "isClosed": false,
+        "coordinates": [
+          [12.9440, 77.6240],
+          [12.9370, 77.6280],
+          [12.9300, 77.6320],
+          [12.9250, 77.6350]
+        ]
+      },
+      {
+        "id": "road-bypass-north",
+        "name": "Green Park West Bypass",
+        "from": "J1",
+        "to": "J9",
+        "lengthKm": 2.2,
+        "freeFlowSpeed": 50,
+        "currentSpeed": 48,
+        "vehicleUnits": 7,
+        "queueLength": 25,
+        "trafficLevel": "LOW",
+        "isClosed": false,
+        "coordinates": [
+          [12.9760, 77.5920],
+          [12.9700, 77.5870],
+          [12.9600, 77.5850]
+        ]
+      },
+      {
+        "id": "road-bypass-south",
+        "name": "Innovation Boulevard Bypass",
+        "from": "J9",
+        "to": "J10",
+        "lengthKm": 2.8,
+        "freeFlowSpeed": 55,
+        "currentSpeed": 48,
+        "vehicleUnits": 9,
+        "queueLength": 35,
+        "trafficLevel": "LOW",
+        "isClosed": false,
+        "coordinates": [
+          [12.9600, 77.5850],
+          [12.9520, 77.5880],
+          [12.9450, 77.5910],
+          [12.9400, 77.5950]
+        ]
+      },
+      {
+        "id": "road-silk-interchange",
+        "name": "South Ring Link to Silk Board",
+        "from": "J10",
+        "to": "J7",
+        "lengthKm": 3.1,
+        "freeFlowSpeed": 50,
+        "currentSpeed": 44,
+        "vehicleUnits": 12,
+        "queueLength": 40,
+        "trafficLevel": "LOW",
+        "isClosed": false,
+        "coordinates": [
+          [12.9400, 77.5950],
+          [12.9360, 77.6040],
+          [12.9340, 77.6120],
+          [12.9320, 77.6200]
+        ]
+      },
+      {
+        "id": "road-metro-approach",
+        "name": "Silk Board to Metro Central Link",
+        "from": "J7",
+        "to": "J8",
+        "lengthKm": 2.0,
+        "freeFlowSpeed": 45,
+        "currentSpeed": 40,
+        "vehicleUnits": 10,
+        "queueLength": 30,
+        "trafficLevel": "LOW",
+        "isClosed": false,
+        "coordinates": [
+          [12.9320, 77.6200],
+          [12.9280, 77.6270],
+          [12.9250, 77.6350]
+        ]
+      },
+      {
+        "id": "road-mg-arterial",
+        "name": "MG Central Arterial",
+        "from": "J1",
+        "to": "J3",
+        "lengthKm": 2.4,
+        "freeFlowSpeed": 45,
+        "currentSpeed": 35,
+        "vehicleUnits": 16,
+        "queueLength": 65,
+        "trafficLevel": "MODERATE",
+        "isClosed": false,
+        "coordinates": [
+          [12.9760, 77.5920],
+          [12.9750, 77.6030],
+          [12.9730, 77.6150]
+        ]
+      },
+      {
+        "id": "road-east-arterial",
+        "name": "Old Airport East Arterial",
+        "from": "J3",
+        "to": "J5",
+        "lengthKm": 2.5,
+        "freeFlowSpeed": 45,
+        "currentSpeed": 22,
+        "vehicleUnits": 22,
+        "queueLength": 115,
+        "trafficLevel": "HIGH",
+        "isClosed": false,
+        "coordinates": [
+          [12.9730, 77.6150],
+          [12.9640, 77.6140],
+          [12.9560, 77.6120]
+        ]
+      },
+      {
+        "id": "road-j5-to-j6",
+        "name": "Airport Flyover Connector",
+        "from": "J5",
+        "to": "J6",
+        "lengthKm": 2.0,
+        "freeFlowSpeed": 45,
+        "currentSpeed": 30,
+        "vehicleUnits": 18,
+        "queueLength": 70,
+        "trafficLevel": "MODERATE",
+        "isClosed": false,
+        "coordinates": [
+          [12.9560, 77.6120],
+          [12.9500, 77.6180],
+          [12.9440, 77.6240]
+        ]
+      },
+      {
+        "id": "road-victoria-link",
+        "name": "Victoria Memorial Link (Closed)",
+        "from": "J4",
+        "to": "J7",
+        "lengthKm": 3.8,
+        "freeFlowSpeed": 0,
+        "currentSpeed": 0,
+        "vehicleUnits": 0,
+        "queueLength": 0,
+        "trafficLevel": "CLOSED",
+        "isClosed": true,
+        "coordinates": [
+          [12.9650, 77.6200],
+          [12.9510, 77.6010],
+          [12.9320, 77.6200]
+        ]
+      }
+    ]
+  },
+  "routes": [
+    {
+      "id": "route-a",
+      "code": "ROUTE A",
+      "name": "Central Expressway Corridor",
+      "origin": "North Gate Tech Hub (J1)",
+      "destination": "Metro Central Terminal (J8)",
+      "distanceKm": 8.2,
+      "baseDurationMin": 14,
+      "estimatedDurationMin": 14,
+      "status": "RECOMMENDED",
+      "roadIds": [
+        "road-north-arterial",
+        "road-cyber-link",
+        "road-central-exp",
+        "road-koramangala-ring"
+      ],
+      "kitIds": ["TS-002", "TS-008", "TS-001", "TS-006"],
+      "signalIds": ["TS-101", "TS-102", "TS-104", "TS-106", "TS-109"],
+      "coordinates": [
+        [12.9760, 77.5920],
+        [12.9740, 77.5980],
+        [12.9710, 77.6040],
+        [12.9680, 77.6080],
+        [12.9670, 77.6140],
+        [12.9650, 77.6200],
+        [12.9580, 77.6220],
+        [12.9510, 77.6230],
+        [12.9440, 77.6240],
+        [12.9370, 77.6280],
+        [12.9300, 77.6320],
+        [12.9250, 77.6350]
+      ],
+      "trafficScore": 22,
+      "trafficLevel": "LOW",
+      "delayMinutes": 0,
+      "events": []
+    },
+    {
+      "id": "route-b",
+      "code": "ROUTE B",
+      "name": "Green Park & Innovation Bypass",
+      "origin": "North Gate Tech Hub (J1)",
+      "destination": "Metro Central Terminal (J8)",
+      "distanceKm": 10.1,
+      "baseDurationMin": 18,
+      "estimatedDurationMin": 18,
+      "status": "ALTERNATE",
+      "roadIds": [
+        "road-bypass-north",
+        "road-bypass-south",
+        "road-metro-approach"
+      ],
+      "kitIds": ["TS-002", "TS-007", "TS-004", "TS-006"],
+      "signalIds": ["TS-101", "TS-108", "TS-107", "TS-109"],
+      "coordinates": [
+        [12.9760, 77.5920],
+        [12.9700, 77.5870],
+        [12.9600, 77.5850],
+        [12.9520, 77.5880],
+        [12.9450, 77.5910],
+        [12.9400, 77.5950],
+        [12.9360, 77.6040],
+        [12.9340, 77.6120],
+        [12.9320, 77.6200],
+        [12.9280, 77.6270],
+        [12.9250, 77.6350]
+      ],
+      "trafficScore": 18,
+      "trafficLevel": "LOW",
+      "delayMinutes": 0,
+      "events": []
+    },
+    {
+      "id": "route-c",
+      "code": "ROUTE C",
+      "name": "East Arterial & Airport Flyover",
+      "origin": "North Gate Tech Hub (J1)",
+      "destination": "Metro Central Terminal (J8)",
+      "distanceKm": 9.4,
+      "baseDurationMin": 21,
+      "estimatedDurationMin": 28,
+      "status": "ALTERNATE",
+      "roadIds": [
+        "road-north-arterial",
+        "road-mg-arterial",
+        "road-east-arterial",
+        "road-j5-to-j6",
+        "road-koramangala-ring"
+      ],
+      "kitIds": ["TS-002", "TS-003", "TS-006"],
+      "signalIds": ["TS-101", "TS-103", "TS-105", "TS-106", "TS-109"],
+      "coordinates": [
+        [12.9760, 77.5920],
+        [12.9740, 77.5980],
+        [12.9710, 77.6040],
+        [12.9680, 77.6080],
+        [12.9730, 77.6150],
+        [12.9640, 77.6140],
+        [12.9560, 77.6120],
+        [12.9500, 77.6180],
+        [12.9440, 77.6240],
+        [12.9370, 77.6280],
+        [12.9300, 77.6320],
+        [12.9250, 77.6350]
+      ],
+      "trafficScore": 64,
+      "trafficLevel": "HIGH",
+      "delayMinutes": 7,
+      "events": ["Construction (600m)", "Underpass Flooding"]
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "hourlyTraffic": [
+    { "time": "00:00", "vehiclesPerHour": 18, "avgSpeed": 54, "avgQueue": 10, "waitingSec": 8 },
+    { "time": "02:00", "vehiclesPerHour": 12, "avgSpeed": 58, "avgQueue": 5, "waitingSec": 6 },
+    { "time": "04:00", "vehiclesPerHour": 15, "avgSpeed": 56, "avgQueue": 8, "waitingSec": 7 },
+    { "time": "06:00", "vehiclesPerHour": 38, "avgSpeed": 48, "avgQueue": 25, "waitingSec": 15 },
+    { "time": "07:00", "vehiclesPerHour": 72, "avgSpeed": 38, "avgQueue": 65, "waitingSec": 32 },
+    { "time": "08:00", "vehiclesPerHour": 114, "avgSpeed": 22, "avgQueue": 140, "waitingSec": 74 },
+    { "time": "09:00", "vehiclesPerHour": 156, "avgSpeed": 14, "avgQueue": 190, "waitingSec": 98 },
+    { "time": "10:00", "vehiclesPerHour": 128, "avgSpeed": 20, "avgQueue": 130, "waitingSec": 68 },
+    { "time": "11:00", "vehiclesPerHour": 94, "avgSpeed": 32, "avgQueue": 85, "waitingSec": 45 },
+    { "time": "12:00", "vehiclesPerHour": 86, "avgSpeed": 35, "avgQueue": 75, "waitingSec": 38 },
+    { "time": "13:00", "vehiclesPerHour": 90, "avgSpeed": 34, "avgQueue": 80, "waitingSec": 40 },
+    { "time": "14:00", "vehiclesPerHour": 98, "avgSpeed": 30, "avgQueue": 90, "waitingSec": 46 },
+    { "time": "15:00", "vehiclesPerHour": 112, "avgSpeed": 26, "avgQueue": 110, "waitingSec": 56 },
+    { "time": "16:00", "vehiclesPerHour": 135, "avgSpeed": 19, "avgQueue": 155, "waitingSec": 82 },
+    { "time": "17:00", "vehiclesPerHour": 168, "avgSpeed": 12, "avgQueue": 210, "waitingSec": 112 },
+    { "time": "18:00", "vehiclesPerHour": 182, "avgSpeed": 9, "avgQueue": 240, "waitingSec": 126 },
+    { "time": "19:00", "vehiclesPerHour": 160, "avgSpeed": 15, "avgQueue": 180, "waitingSec": 92 },
+    { "time": "20:00", "vehiclesPerHour": 124, "avgSpeed": 24, "avgQueue": 120, "waitingSec": 60 },
+    { "time": "21:00", "vehiclesPerHour": 88, "avgSpeed": 36, "avgQueue": 70, "waitingSec": 35 },
+    { "time": "22:00", "vehiclesPerHour": 54, "avgSpeed": 44, "avgQueue": 40, "waitingSec": 20 },
+    { "time": "23:00", "vehiclesPerHour": 32, "avgSpeed": 50, "avgQueue": 20, "waitingSec": 12 }
+  ],
+  "dailyTrend": [
+    { "day": "Monday", "peakVehicles": 182, "avgDelay": 18.5, "incidents": 5 },
+    { "day": "Tuesday", "peakVehicles": 174, "avgDelay": 16.2, "incidents": 3 },
+    { "day": "Wednesday", "peakVehicles": 180, "avgDelay": 17.8, "incidents": 4 },
+    { "day": "Thursday", "peakVehicles": 186, "avgDelay": 19.1, "incidents": 6 },
+    { "day": "Friday", "peakVehicles": 195, "avgDelay": 22.4, "incidents": 7 },
+    { "day": "Saturday", "peakVehicles": 142, "avgDelay": 12.0, "incidents": 2 },
+    { "day": "Sunday", "peakVehicles": 98, "avgDelay": 8.3, "incidents": 1 }
+  ],
+  "corridorCongestion": [
+    { "corridor": "Central Expressway", "congestionScore": 84, "avgSpeed": 14, "queueLength": 185 },
+    { "corridor": "Old Airport East Arterial", "congestionScore": 72, "avgSpeed": 18, "queueLength": 135 },
+    { "corridor": "Silk Board Interchange", "congestionScore": 88, "avgSpeed": 12, "queueLength": 210 },
+    { "corridor": "Koramangala Outer Ring", "congestionScore": 48, "avgSpeed": 32, "queueLength": 75 },
+    { "corridor": "Green Park Bypass", "congestionScore": 22, "avgSpeed": 48, "queueLength": 30 },
+    { "corridor": "Innovation Boulevard", "congestionScore": 26, "avgSpeed": 46, "queueLength": 35 }
+  ],
+  "signalEfficiency": [
+    { "signal": "TS-101", "efficiency": 92, "avgClearanceSec": 18, "throughputPerHour": 1450 },
+    { "signal": "TS-102", "efficiency": 78, "avgClearanceSec": 32, "throughputPerHour": 1180 },
+    { "signal": "TS-103", "efficiency": 65, "avgClearanceSec": 42, "throughputPerHour": 940 },
+    { "signal": "TS-104", "efficiency": 48, "avgClearanceSec": 58, "throughputPerHour": 820 },
+    { "signal": "TS-105", "efficiency": 62, "avgClearanceSec": 45, "throughputPerHour": 980 },
+    { "signal": "TS-106", "efficiency": 82, "avgClearanceSec": 28, "throughputPerHour": 1320 },
+    { "signal": "TS-107", "efficiency": 42, "avgClearanceSec": 64, "throughputPerHour": 790 },
+    { "signal": "TS-108", "efficiency": 95, "avgClearanceSec": 15, "throughputPerHour": 1520 }
+  ]
+}
